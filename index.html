@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wish Upon a Shooting Star</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --sky:#020216;
+      --star:#fff;
+      --accent:#ffbb00;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;font-family:"Poppins",sans-serif;color:#fff}
+    body,html{height:100%;background:var(--sky);overflow:hidden}
+
+    /* ★ Static star field */
+    .star{
+      position:absolute;
+      width:2px;height:2px;background:var(--star);border-radius:50%;
+      animation:twinkle 4s linear infinite;
+    }
+    @keyframes twinkle{
+      0%,100%{opacity:.8} 50%{opacity:.2}
+    }
+
+    /* ★ Shooting stars */
+    .shooting-star{
+      position:absolute;
+      top:-10vh;
+      width:120px;height:2px;
+      background:linear-gradient(90deg,var(--star),transparent);
+      animation:shoot 4s cubic-bezier(.61,.01,.96,.36) infinite;
+    }
+    @keyframes shoot{
+      0%{transform:translate(-10vw,-10vh) rotate(45deg);opacity:1}
+      80%{opacity:1}
+      100%{transform:translate(110vw,110vh) rotate(45deg);opacity:0}
+    }
+
+    /* ★ Form container */
+    .panel{
+      position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+      background:rgba(0,0,0,.65);padding:2rem 2.5rem;border-radius:1rem;
+      backdrop-filter:blur(6px);min-width:280px;box-shadow:0 0 20px rgba(0,0,0,.6);
+    }
+    h1{font-size:1.6rem;margin-bottom:1rem;text-align:center;color:var(--accent)}
+    label{display:block;font-size:.9rem;margin-top:1rem}
+    input,textarea,button{
+      width:100%;padding:.7rem 1rem;margin-top:.4rem;border:none;border-radius:.7rem;
+      font-size:1rem;
+    }
+    input,textarea{color:#222}
+    textarea{min-height:90px;resize:vertical}
+    button{
+      margin-top:1.5rem;background:var(--accent);color:#222;font-weight:600;
+      cursor:pointer;transition:transform .15s ease;
+    }
+    button:hover{transform:translateY(-2px)}
+    .msg{margin-top:1rem;font-size:.85rem;text-align:center}
+  </style>
+</head>
+<body>
+
+  <!-- Random stars -->
+  <script>
+    const STAR_COUNT = 120;
+    for(let i=0;i<STAR_COUNT;i++){
+      const s=document.createElement('div');
+      s.className='star';
+      const size=Math.random()*2+1;
+      s.style.width=s.style.height=size+'px';
+      s.style.left=Math.random()*100+'vw';
+      s.style.top=Math.random()*100+'vh';
+      s.style.animationDelay=Math.random()*4+'s';
+      document.body.appendChild(s);
+    }
+    /* Few shooting stars */
+    const SHOOTERS = 6;
+    for(let i=0;i<SHOOTERS;i++){
+      const st=document.createElement('div');
+      st.className='shooting-star';
+      st.style.animationDelay=i*0.8+'s';
+      document.body.appendChild(st);
+    }
+  </script>
+
+  <!-- Form -->
+  <div class="panel">
+    <h1>Make a Wish ☆</h1>
+    <form id="wishForm">
+      <label for="name">Nama</label>
+      <input type="text" id="name" name="name" placeholder="Namamu..." required />
+
+      <label for="wish">Keinginan</label>
+      <textarea id="wish" name="wish" placeholder="Tulis keinginanmu…" required></textarea>
+
+      <button type="submit">Kirim ke Bintang</button>
+      <div id="msg" class="msg"></div>
+    </form>
+  </div>
+
+  <script>
+    const form=document.getElementById('wishForm');
+    const msg=document.getElementById('msg');
+
+    form.addEventListener('submit', async e=>{
+      e.preventDefault();
+      msg.textContent='⏳ Mengirim…';
+      try{
+        const res = await fetch('/.netlify/functions/submit-wish',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({
+            name:form.name.value.trim(),
+            wish:form.wish.value.trim()
+          })
+        });
+        if(!res.ok) throw new Error(await res.text());
+        msg.textContent='✅ Terkirim! Semoga terkabul ✨';
+        form.reset();
+      }catch(err){
+        console.error(err);
+        msg.textContent='❌ Gagal mengirim, coba lagi';
+      }
+    });
+  </script>
+
+</body>
+</html>
