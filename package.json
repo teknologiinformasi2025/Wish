@@ -1,0 +1,21 @@
+{
+  "name": "wish-shooting-star",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",           // supaya bisa `import …` di Functions
+  "scripts": {
+    "dev":    "netlify dev",          // jalankan lokal di http://localhost:8888
+    "build":  "echo \"Nothing to build\"",
+    "deploy": "netlify deploy --prod"
+  },
+  "dependencies": {
+    "@vercel/postgres": "^1.2.0"      // ↙  pilih salah satu —
+    /* atau "postgres": "^3.4.3" */   //     hapus baris yang tidak dipakai
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.23.0"
+  },
+  "engines": {
+    "node": ">=18"                    // Netlify saat ini default Node 18/20
+  }
+}
