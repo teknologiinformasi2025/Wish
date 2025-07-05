@@ -1,0 +1,23 @@
+# ──────────────────────────────────────────────────────────────────
+#  Netlify build & deploy configuration
+# ──────────────────────────────────────────────────────────────────
+
+[build]
+  # Karena proyek Anda hanya laman statis + Functions,
+  # tidak perlu proses build rumit.
+  command   = "echo 'Nothing to build'"
+  publish   = "."                # folder yang dipublish (root)
+
+[functions]
+  directory     = "netlify/functions"   # tempat file *.js Function
+  node_bundler  = "esbuild"             # bundler modern: support ESM import 0
+  # external_node_modules = ["@vercel/postgres"]   # ← uncomment jika lib terlalu besar
+
+[dev]            # agar `netlify dev` otomatis mendeteksi Functions
+  functions = "netlify/functions"
+
+# ──────────────────────────────────────────────────────────────────
+#  Environment variable (optional—bisa di‐UI juga)
+# ──────────────────────────────────────────────────────────────────
+[context.production.environment]
+  NEON_DB_URL = "postgresql://<user>:<pass>@<host>/<db>?sslmode=require"
