@@ -2,19 +2,19 @@
   "name": "wish-shooting-star",
   "version": "1.0.0",
   "private": true,
-  "type": "module",          
+  "type": "module",
   "scripts": {
-    "dev":    "netlify dev",        
-    "build":  "echo \"Nothing to build\"",
+    "dev": "netlify dev",
+    "build": "echo \"Nothing to build\"",
     "deploy": "netlify deploy --prod"
   },
   "dependencies": {
-    "postgres": "^3.4.3"
+    "@neondatabase/serverless": "^0.6.0"
   },
   "devDependencies": {
     "netlify-cli": "^17.23.0"
   },
   "engines": {
-    "node": ">=18"                    
+    "node": ">=18"
   }
 }
